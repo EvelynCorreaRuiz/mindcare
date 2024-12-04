@@ -4,6 +4,8 @@ import 'screens/dynamic_form_screen.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+
+
 void main() {
   tz.initializeTimeZones(); //inicializa las zonas horarias
   runApp(const MyApp());
@@ -24,6 +26,10 @@ class MyApp extends StatelessWidget {
           bodyMedium: TextStyle(fontSize: 14), // Texto secundario
           headlineLarge: TextStyle(fontSize: 32,fontWeight: FontWeight.bold),// Encabezados
           titleMedium: TextStyle(fontSize: 20), //Subtítulos
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF20445A), //Fondo de la app
+          iconTheme: IconThemeData(color: Colors.white),
         ),
       ),
       home: const SplashScreen(),

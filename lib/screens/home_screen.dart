@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindcare/screens/login_screen.dart';
+import 'package:mindcare/screens/register_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -62,7 +63,7 @@ class HomeScreen extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const LoginScreen(), // Navega a LoginScreen
+                              builder: (context) => const RegisterScreen(), // Navega al Registro
                             )
                         );
                       },
