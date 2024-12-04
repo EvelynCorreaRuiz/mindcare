@@ -1,5 +1,5 @@
 name: mindcare
-description: "A new Flutter project."
+description: "Prueba para MindCare"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -30,7 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  intl: ^0.20.1
+  flutter_local_notifications: ^18.0.1
+  timezone: ^0.10.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -45,14 +47,28 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  assets:
+    - assets/images/
+  
+  fonts:
+      - family: Parkinsans 
+        fonts:
+          - asset: assets/fonts/Parkinsans-Regular.ttf # Fuente Regular
+          - asset: assets/fonts/Parkinsans-Bold.ttf    # Fuente Bold
+            weight: 700                               # Peso de la fuente
+          - asset: assets/fonts/Parkinsans-Medium.ttf # Fuente Medium
+            weight: 500
+          - asset: assets/fonts/Parkinsans-Light.ttf  # Fuente Light
+            weight: 300
+          - asset: assets/fonts/Parkinsans-SemiBold.ttf # Fuente SemiBold
+            weight: 600
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

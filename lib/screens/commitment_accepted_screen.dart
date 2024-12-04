@@ -11,7 +11,7 @@ class CommitmentAcceptedScreen extends StatelessWidget {
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const MorningReminderScreen()), // Sustituye NextScreen por la pantalla final
+        MaterialPageRoute(builder: (context) => const MorningReminderScreen()),
       );
     });
 

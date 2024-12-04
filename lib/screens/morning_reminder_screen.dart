@@ -1,9 +1,36 @@
 import 'package:flutter/material.dart';
-import '/widgets/day_circle.dart';
-import 'night_reminder_screen.dart';
+import 'package:intl/intl.dart';
+import 'package:mindcare/screens/night_reminder_screen.dart';
 
-class MorningReminderScreen extends StatelessWidget {
+class MorningReminderScreen extends StatefulWidget {
   const MorningReminderScreen({Key? key}) : super(key: key);
+
+  @override
+  State<MorningReminderScreen> createState() => _MorningReminderScreenState();
+}
+
+class _MorningReminderScreenState extends State<MorningReminderScreen> {
+  TimeOfDay selectedTime = const TimeOfDay(hour: 8, minute: 0);
+  List<String> days = ["D", "L", "M", "M", "J", "V", "S"];
+  List<bool> isSelected = [false, false, false, false, false, false, false];
+  bool isAlarmEnabled = true;
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+    );
+    if (pickedTime != null && pickedTime != selectedTime) {
+      setState(() {
+        selectedTime = pickedTime;
+      });
+    }
+  }
+
+  String formatTime(TimeOfDay time) {
+    final now = DateTime.now();
+    return DateFormat('HH:mm').format(DateTime(now.year, now.month, now.day, time.hour, time.minute));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +46,8 @@ class MorningReminderScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Ícono y título
-            const Icon(Icons.wb_sunny, size: 80, color: Colors.orange),
-            const SizedBox(height: 20),
+            const Icon(Icons.wb_sunny, size: 80, color: Color(0xFFF89C31)),
+            const SizedBox(height: 10),
             const Text(
               "Comienza el día meditando",
               style: TextStyle(
@@ -32,13 +59,13 @@ class MorningReminderScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             const Text(
-              "Te enviaremos un recordatorio por la mañana\npara ayudarte a lograr tu compromiso.",
-              style: TextStyle(fontSize: 16, color: Colors.white70),
+              "Te enviaremos un recordatorio\npor la mañana para ayudarte a lograr tu compromiso.",
+              style: TextStyle(fontSize: 12, color: Colors.white70),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 40),
 
-            // Recordatorio y switches
+            // Recordatorio interactivo
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -46,63 +73,119 @@ class MorningReminderScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Hora del recordatorio
+                  const Text(
+                    "Recordatorio de meditación",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text(
-                        "08:00",
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          if (isAlarmEnabled) {
+                            _selectTime(context);
+                          }
+                        },
+                        child: Text(
+                          formatTime(selectedTime),
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: isAlarmEnabled ? Colors.white : Colors.grey,
+                          ),
                         ),
                       ),
                       Switch(
-                        value: true,
-                        onChanged: null,
-                        activeColor: Color(0xFF6BBFA3),
+                        value: isAlarmEnabled,
+                        onChanged: (value) {
+                          setState(() {
+                            isAlarmEnabled = value;
+                          });
+                        },
+                        activeColor: const Color(0xFFA791C4),
                       ),
                     ],
                   ),
                   const SizedBox(height: 10),
+
                   // Días de la semana
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      DayCircle(day: "D", isActive: true),
-                      DayCircle(day: "L", isActive: true),
-                      DayCircle(day: "M", isActive: true),
-                      DayCircle(day: "M", isActive: true),
-                      DayCircle(day: "J", isActive: true),
-                      DayCircle(day: "V", isActive: true),
-                      DayCircle(day: "S", isActive: false),
-                    ],
+                  AbsorbPointer(
+                    absorbing: !isAlarmEnabled,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: List.generate(days.length, (index) {
+                        return GestureDetector(
+                          onTap: () {
+                            if (isAlarmEnabled) {
+                              setState(() {
+                                isSelected[index] = !isSelected[index];
+                              });
+                            }
+                          },
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: isAlarmEnabled && isSelected[index]
+                                  ? const Color(0xFF6BBFA3)
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: isAlarmEnabled && isSelected[index]
+                                    ? const Color(0xFF6BBFA3)
+                                    : Color(0xFF6BBFA3),
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                days[index],
+                                style: TextStyle(
+                                  color: isAlarmEnabled && isSelected[index]
+                                      ? Colors.white
+                                      : Colors.grey,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 250),
 
             // Texto inferior
             const Text(
-              "Las personas que madrugan por las mañanas son más propensas a lograr establecer un hábito.",
-              style: TextStyle(fontSize: 14, color: Colors.white70),
+              "Las personas que meditan por las mañanas son más propensas a lograr establecer un hábito.",
+              style: TextStyle(fontSize: 14, color: Color(0xFF6BBFA3)),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
 
             // Botón continuar
             ElevatedButton(
-              onPressed: () {
-                Navigator.push(
+              onPressed: isAlarmEnabled && isSelected.contains(true)
+                  ? () {
+                // Acción del botón continuar
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => const NightReminderScreen()),
                 );
-              },
+              }
+                  : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF6BBFA3),
+                disabledBackgroundColor: Colors.grey,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
