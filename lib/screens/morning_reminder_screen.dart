@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mindcare/screens/night_reminder_screen.dart';
+import 'night_reminder_screen.dart';
+import 'dart:math';
 
 class MorningReminderScreen extends StatefulWidget {
   const MorningReminderScreen({Key? key}) : super(key: key);
@@ -9,11 +10,31 @@ class MorningReminderScreen extends StatefulWidget {
   State<MorningReminderScreen> createState() => _MorningReminderScreenState();
 }
 
-class _MorningReminderScreenState extends State<MorningReminderScreen> {
+class _MorningReminderScreenState extends State<MorningReminderScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
   TimeOfDay selectedTime = const TimeOfDay(hour: 8, minute: 0);
   List<String> days = ["D", "L", "M", "M", "J", "V", "S"];
   List<bool> isSelected = [false, false, false, false, false, false, false];
   bool isAlarmEnabled = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // Inicializa el controlador de animación
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 15),
+    )..repeat(); // Hace que la animación se repita continuamente
+  }
+
+  @override
+  void dispose() {
+    // Libera los recursos del controlador cuando la pantalla se cierra
+    _controller.dispose();
+    super.dispose();
+  }
 
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
@@ -29,7 +50,8 @@ class _MorningReminderScreenState extends State<MorningReminderScreen> {
 
   String formatTime(TimeOfDay time) {
     final now = DateTime.now();
-    return DateFormat('HH:mm').format(DateTime(now.year, now.month, now.day, time.hour, time.minute));
+    return DateFormat('HH:mm')
+        .format(DateTime(now.year, now.month, now.day, time.hour, time.minute));
   }
 
   @override
@@ -45,8 +67,21 @@ class _MorningReminderScreenState extends State<MorningReminderScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Ícono y título
-            const Icon(Icons.wb_sunny, size: 80, color: Color(0xFFF89C31)),
+            // Animación del Sol
+            AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                return Transform.rotate(
+                  angle: _controller.value * 2 * pi,
+                  child: child,
+                );
+              },
+              child: const Icon(
+                Icons.wb_sunny,
+                size: 80,
+                color: Color(0xFFF89C31),
+              ),
+            ),
             const SizedBox(height: 10),
             const Text(
               "Comienza el día meditando",
@@ -140,7 +175,7 @@ class _MorningReminderScreenState extends State<MorningReminderScreen> {
                               border: Border.all(
                                 color: isAlarmEnabled && isSelected[index]
                                     ? const Color(0xFF6BBFA3)
-                                    : Color(0xFF6BBFA3),
+                                    : const Color(0xFF6BBFA3),
                               ),
                             ),
                             child: Center(
@@ -179,7 +214,9 @@ class _MorningReminderScreenState extends State<MorningReminderScreen> {
                 // Acción del botón continuar
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const NightReminderScreen()),
+                  MaterialPageRoute(
+                      builder: (context) =>
+                      const NightReminderScreen()),
                 );
               }
                   : null,
@@ -189,10 +226,11 @@ class _MorningReminderScreenState extends State<MorningReminderScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
-                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 50),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 15, horizontal: 50),
               ),
               child: const Text(
-                "Continuar",
+                "Guardar y Continuar",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

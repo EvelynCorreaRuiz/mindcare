@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mindcare/screens/home_screen.dart';
 
 class NightReminderScreen extends StatefulWidget {
   const NightReminderScreen({Key? key}) : super(key: key);
@@ -175,7 +176,12 @@ class _NightReminderScreenState extends State<NightReminderScreen> {
             ElevatedButton(
               onPressed: isAlarmEnabled && isSelected.contains(true)
                   ? () {
-                // Acción del botón continuar
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                      const HomeScreen(userName: '',)),
+                );// Acción del botón continuar
               }
                   : null,
               style: ElevatedButton.styleFrom(
@@ -187,7 +193,7 @@ class _NightReminderScreenState extends State<NightReminderScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 50),
               ),
               child: const Text(
-                "Continuar",
+                "Guardar y Continuar",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

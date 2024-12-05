@@ -11,10 +11,6 @@ class CommitmentScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xFF20445A),
         elevation: 0,
-        title: const Text(
-          "Compromiso",
-          style: TextStyle(color: Colors.white),
-        ),
         centerTitle: true,
       ),
       backgroundColor: const Color(0xFF20445A),
@@ -25,7 +21,7 @@ class CommitmentScreen extends StatelessWidget {
           children: [
             // Imagen
             ClipRRect(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(40),
               child: Image.asset(
                 'assets/images/compromiso.jpg', // Ruta de la imagen
                 height: 200,
@@ -33,12 +29,12 @@ class CommitmentScreen extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             // Texto del compromiso
             const Text(
               "El compromiso comienza contigo",
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
@@ -49,11 +45,11 @@ class CommitmentScreen extends StatelessWidget {
               "Prometo dedicarme el tiempo necesario\npara lograr Calmar mi Mente.",
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.white70,
+                color: Colors.white70,fontStyle: FontStyle.italic
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 200),
             // Botón para aceptar
             ElevatedButton(
               onPressed: () {
